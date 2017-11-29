@@ -1,3 +1,7 @@
+// fin-hypergrid-field-tools@1.0.0
+
+(function(require, module, exports) {
+
 'use strict';
 
 /**
@@ -56,3 +60,11 @@ module.exports = {
     titleize: titleize,  // override as needed for custom header titleization
     getSchema: getSchema
 };
+
+
+})(fin.Hypergrid.require, fin.Hypergrid.modules, fin.Hypergrid.modules.exports = {});
+
+fin.Hypergrid.modules.exports.$$VERSION = '1.0.0';
+fin.Hypergrid.modules['fin-hypergrid-field-tools'] = fin.Hypergrid.modules.exports;
+delete fin.Hypergrid.modules.exports;
+
