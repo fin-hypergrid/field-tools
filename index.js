@@ -2,7 +2,7 @@
 
 /**
  * @name fields
- * @module
+ * @namespace
  */
 
 var REGEXP_META_PREFIX = /^__/, // starts with double underscore
@@ -13,9 +13,9 @@ var REGEXP_META_PREFIX = /^__/, // starts with double underscore
 /**
  * Returns an array of keys (field names) of the given data row object.
  * Field names beginning with double underscore (`__`) are considered reserved for system use and are excluded from the results.
- * @param {object} hash
+ * @param {object} [dataRow] - If omitted or otherwise falsy, returns an empty array.
  * @returns {string[]} Member names from `dataRow` that do _not_ begin with double-underscore.
- * @memberOf module:fields
+ * @memberOf namespace:fields
  */
 function getFieldNames(dataRow) {
     return Object.keys(dataRow || []).filter(function(fieldName) {
@@ -29,25 +29,50 @@ function capitalize(a, b, c) {
     return b.toUpperCase() + c;
 }
 
+var shortWords = ['of', 'at', 'by', 'from', 'and', 'but', 'for', 'a', 'an', 'the'];
+
 /**
- * Separates camel case or white-space-, hypen-, or underscore-separated-words into truly separate words and capitalizing the first letter of each.
+ * Separates camel case or white-space-, hypen-, or underscore-separated-words into truly separate words and capitalizing the first letter of each except for members of `shortWords`.
  * @param string
  * @returns {string}
- * @memberOf module:fields
+ * @memberOf namespace:fields
  */
 function titleize(string) {
-    return (REGEXP_LOWER_CASE_LETTER.test(string) ? string : string.toLowerCase())
+    var title = (REGEXP_LOWER_CASE_LETTER.test(string) ? string : string.toLowerCase())
         .replace(REGEXP_WORD_SEPARATORS, capitalize)
         .replace(REGEXP_CAPITAL_LETTERS, ' $&')
         .trim();
+
+    shortWords.forEach(function(word) {
+        word = ' ' + word + ' ';
+        title = title.replace(new RegExp(word, 'gi'), word);
+    });
+
+    return title;
 }
 
+/**
+ * Derive a schema from field names, including derived header when field name unsuitable as such.
+ * A suitable field name has no underscores _and_ contains spaces and/or mixed case (but not camelCase).
+ * @param data
+ * @returns {Array}
+ * @memberOf namespace:fields
+ */
 function getSchema(data){
-    return getFieldNames(data && data[0] || {}).map(function(name) {
-        return {
-            name: name,
-            header: titleize(name)
-        };
+    // find first defined dataRow
+    var dataRow = data.find(function(dataRow) { return dataRow; }) || {};
+
+    return getFieldNames(dataRow).map(function(name) {
+        return name.indexOf('_') < 0 && (
+            name.indexOf(' ') >= 0 ||
+            /[a-z]/.test(name) && /[A-Z]/.test(name) && !/[^a-z][A-Z]/.test(name)
+        ) ?
+            {
+                name: name
+            } : {
+                name: name,
+                header: titleize(name)
+            };
     });
 }
 

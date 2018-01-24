@@ -1,6 +1,6 @@
 {
   "name": "fin-hypergrid-field-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hypergrid field tools",
   "main": "index.js",
   "scripts": {
@@ -15,9 +15,5 @@
   "bugs": {
     "url": "https://github.com/joneit/field-tools/issues"
   },
-  "homepage": "https://github.com/joneit/field-tools#readme",
-  "devDependencies": {
-    "fin-hypergrid-client-module-maker": "^1.1.0",
-    "gulp": "^3.9.1"
-  }
+  "homepage": "https://github.com/joneit/field-tools#readme"
 }
