@@ -65,7 +65,7 @@ function getSchema(data){
     return getFieldNames(dataRow).map(function(name) {
         return name.indexOf('_') < 0 && (
             name.indexOf(' ') >= 0 ||
-            /[a-z]/.test(name) && /[A-Z]/.test(name) && !/[^a-z][A-Z]/.test(name)
+            /[a-z]/.test(name) && /[A-Z]/.test(name) && !/[a-z][A-Z]/.test(name)
         ) ?
             {
                 name: name
